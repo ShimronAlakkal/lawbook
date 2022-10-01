@@ -4,17 +4,25 @@ class ColorPalette {
   ColorPalette();
 
   // the main green used in buttons and stuff
-  final Color primaryGreen = const Color(0xff53AE51);
+  final Color primaryGreen = const Color(0xff109566);
 
-  // the background color 
+  // the secondary green 
+  final Color secondaryGreen = const Color(0xff139768);
+
+  // accent green
+  final Color accentGreen = const Color(0xffCCF9D8);
+  
+
+  // the background color
   final Color backgroundColor = const Color(0xffF8F8F8);
 
   // the main title color
   final Color mainTitleColor = const Color(0xff2A2426);
 
   // container fill grey
-  final Color containerFillGrey = const Color(0xffF3F3F3);
+  final Color containerFillGrey = const Color(0xffF3F4F8);
 
   // touch blue
   final Color touchBlue = const Color(0xffE2F0F0);
 }
+
