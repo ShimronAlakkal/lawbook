@@ -10,7 +10,9 @@ class FileModel {
   FileModel({
     required this.caseNo,
     required this.court,
+    required this.isOver,
     required this.party,
+    required this.importance,
     required this.section,
     required this.sectionDetails,
     required this.caseDescription,
@@ -21,10 +23,12 @@ class FileModel {
 
   String caseNo;
   String court;
+  int importance;
   Party party;
   String section;
   String sectionDetails;
   String caseDescription;
+  bool isOver;
   List<Hearing> hearings;
   List<String>? tags;
   List<String>? files;
@@ -36,6 +40,8 @@ class FileModel {
         section: json["section"],
         sectionDetails: json["sectionDetails"],
         caseDescription: json["caseDescription"],
+        importance: json["importance"],
+        isOver: json["isOver"],
         tags: List<String>.from(json["tags"].map((x) => x)),
         files: List<String>.from(json["files"].map((x) => x)),
         hearings: List<Hearing>.from(
@@ -49,6 +55,8 @@ class FileModel {
         "section": section,
         "sectionDetails": sectionDetails,
         "caseDescription": caseDescription,
+        "isOver": isOver,
+        "importance": importance,
         "tags": tags != null ? List<dynamic>.from(tags!.map((x) => x)) : [],
         "files": files != null ? List<dynamic>.from(files!.map((x) => x)) : [],
         "hearings": List<dynamic>.from(hearings.map((x) => x.toJson())),
