@@ -105,3 +105,67 @@ class CustomWidget {
     }
   }
 }
+
+// The text fields used in the auth based pages.
+class TopLabelTextField {
+  TextEditingController controller;
+  String label;
+  double? borderRadius;
+  String hintText;
+  bool obscureText;
+  int? maxLines;
+  int? maxLength;
+  TextInputType keyboardType;
+
+  TopLabelTextField(
+      {required this.controller,
+      required this.label,
+      required this.hintText,
+      required this.keyboardType,
+      required this.obscureText,
+      this.maxLines,
+      this.maxLength,
+      this.borderRadius});
+
+  topLabelTextField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 14,
+            color: ColorPalette().secondaryGreen,
+          ),
+        ),
+        const SizedBox(height: 6),
+        TextField(
+          maxLength: maxLength,
+          maxLines: maxLines != null ? maxLines! : 1,
+          keyboardType: keyboardType,
+          obscureText: obscureText,
+          cursorColor: ColorPalette().mainTitleColor,
+          autocorrect: true,
+          autofocus: false,
+          controller: controller,
+          decoration: InputDecoration(
+            hintText: hintText,
+            hintStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey.shade400)),
+            disabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey.shade400)),
+            border: borderRadius == null
+                ? OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(0),
+                    borderSide: BorderSide(color: ColorPalette().primaryGreen))
+                : OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(borderRadius!),
+                    borderSide: BorderSide(color: ColorPalette().primaryGreen)),
+          ),
+        ),
+      ],
+    );
+  }
+}
