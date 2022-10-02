@@ -8,13 +8,14 @@ String fileModelToJson(FileModel data) => json.encode(data.toJson());
 
 class FileModel {
   FileModel({
-    required this.caseNo,
     required this.court,
-    required this.isOver,
-    required this.party,
-    required this.importance,
+    required this.caseNo,
     required this.section,
     required this.sectionDetails,
+    required this.client,
+    required this.opposition,
+    required this.importance,
+    required this.isOver,
     required this.caseDescription,
     required this.hearings,
     this.tags,
@@ -24,7 +25,8 @@ class FileModel {
   String caseNo;
   String court;
   int importance;
-  Party party;
+  Party client;
+  Party opposition;
   String section;
   String sectionDetails;
   String caseDescription;
@@ -36,7 +38,8 @@ class FileModel {
   factory FileModel.fromJson(Map<String, dynamic> json) => FileModel(
         caseNo: json["caseNo"],
         court: json["court"],
-        party: Party.fromJson(json["party"]),
+        client: Party.fromJson(json["party"]),
+        opposition: Party.fromJson(json["party"]),
         section: json["section"],
         sectionDetails: json["sectionDetails"],
         caseDescription: json["caseDescription"],
@@ -51,7 +54,8 @@ class FileModel {
   Map<String, dynamic> toJson() => {
         "caseNo": caseNo,
         "court": court,
-        "party": party.toJson(),
+        "client": client.toJson(),
+        "opposition": opposition.toJson(),
         "section": section,
         "sectionDetails": sectionDetails,
         "caseDescription": caseDescription,

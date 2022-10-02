@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lawbook/constants/color_palette.dart';
 import 'package:lawbook/views/UI/add_case.dart';
-import 'package:lawbook/views/UI/create_organization.dart';
+import 'package:lawbook/views/UI/organization/create_organization.dart';
 import 'package:lawbook/views/UI/read_page.dart';
 import 'package:lawbook/views/UI/view_case.dart';
 import 'package:lawbook/widgets/custom_widgets.dart';
@@ -41,7 +41,7 @@ class _HomeViewState extends State<HomeView> {
               onPressed: () {
                 // go to the file addition page.
                 CustomWidget().moveToPage(
-                    page: const CasePage(),
+                    page: CasePage(isEdit: false),
                     context: context,
                     replacement: false);
               },
@@ -92,21 +92,22 @@ class _HomeViewState extends State<HomeView> {
         unselectedItemColor: Colors.grey,
         showSelectedLabels: true,
         currentIndex: currentIndex,
-        items: [
+        items: const [
           // the list view tab
           BottomNavigationBarItem(
               activeIcon: Icon(
                 Icons.dashboard_rounded,
-                color: ColorPalette().primaryGreen,
               ),
-              icon: const Icon(
+              icon: Icon(
                 Icons.dashboard_outlined,
               ),
               label: 'Cases'),
 
           // The organization tab
-          const BottomNavigationBarItem(
-            activeIcon: Icon(Icons.group_rounded),
+          BottomNavigationBarItem(
+            activeIcon: Icon(
+              Icons.group_rounded,
+            ),
             icon: Icon(Icons.group_outlined),
             label: 'Organization',
           ),
@@ -115,9 +116,8 @@ class _HomeViewState extends State<HomeView> {
           BottomNavigationBarItem(
               activeIcon: Icon(
                 CupertinoIcons.book_fill,
-                color: ColorPalette().primaryGreen,
               ),
-              icon: const Icon(
+              icon: Icon(
                 CupertinoIcons.book,
               ),
               label: 'Read & Info'),
