@@ -1,5 +1,5 @@
 class Hearing {
-  DateTime date;
+  String date;
   String description;
   Hearing({
     required this.date,

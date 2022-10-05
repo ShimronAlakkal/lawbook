@@ -4,9 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lawbook/constants/color_palette.dart';
 import 'package:lawbook/models/file_model.dart';
 import 'package:lawbook/models/hearing_model.dart';
-import 'package:lawbook/utils/tools.dart';
 import 'package:lawbook/widgets/custom_widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CasePage extends StatefulWidget {
   CasePage({super.key, required this.isEdit, this.file});
@@ -21,9 +20,6 @@ class CasePage extends StatefulWidget {
 class _CasePageState extends State<CasePage> {
   int currentStep = 0;
   List<Hearing> hearingDnT = [];
-  int flag = 0;
-
-
 
   // section 1 details
   TextEditingController courtController = TextEditingController();
@@ -41,6 +37,7 @@ class _CasePageState extends State<CasePage> {
   TextEditingController oppnRepController = TextEditingController();
 
   // hearing dsc
+  TextEditingController hearingDateController = TextEditingController();
   TextEditingController hearingDescController = TextEditingController();
 
   @override
@@ -64,6 +61,7 @@ class _CasePageState extends State<CasePage> {
     oppnRepController.dispose();
 
     hearingDescController.dispose();
+    hearingDateController.dispose();
     super.dispose();
   }
 
@@ -279,26 +277,33 @@ class _CasePageState extends State<CasePage> {
               // add hearing date.
               InkWell(
                 onTap: () async {
-                  var dp = await pickDate();
-                  if (dp != null) {
-                    // if a date is picked, then show the desecription dialog;
-                    hearingDescDialog(height: height, date: dp);
-                    // if a desc is given, the flag is set to 1,
-                    // the hearing desc controller has text in it, add it to the model.
-                    // else, make sure there is no text and then add it to model;
-                    setState(() {
-                      hearingDnT.add(Hearing(
-                          date: dp, description: hearingDescController.text));
-                      hearingDescController.clear();
-                    });
-                  }
+                  // var dp = await pickDate();
+                  // if (dp != null) {
+                  // if a date is picked, then show the desecription dialog;
+                  hearingDescDialog(height: height);
+                  //   // if a desc is given, the flag is set to 1,
+                  //   // the hearing desc controller has text in it, add it to the model.
+                  //   // else, make sure there is no text and then add it to model;
+                  //   setState(() {
+                  //     hearingDnT.add(Hearing(
+                  //         date: dp, description: hearingDescController.text));
+                  //     hearingDescController.clear();
+                  //   });
+                  // }
                 },
                 child: Container(
                   height: height * 0.06,
                   decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(12),
-                        topRight: Radius.circular(12)),
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(12),
+                      topRight: const Radius.circular(12),
+                      bottomLeft: hearingDnT.isEmpty
+                          ? const Radius.circular(12)
+                          : const Radius.circular(0),
+                      bottomRight: hearingDnT.isEmpty
+                          ? const Radius.circular(12)
+                          : const Radius.circular(0),
+                    ),
                     color: ColorPalette().accentGreen,
                   ),
                   child: Row(
@@ -326,11 +331,12 @@ class _CasePageState extends State<CasePage> {
                 margin: const EdgeInsets.only(bottom: 5),
                 decoration: BoxDecoration(
                     borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(12),
-                        bottomRight: Radius.circular(12)),
+                      bottomLeft: Radius.circular(12),
+                      bottomRight: Radius.circular(12),
+                    ),
                     border: Border.all(color: Colors.grey.shade300)),
                 height: hearingDnT.isEmpty
-                    ? height * 0.04
+                    ? height * 0.0
                     : hearingDnT.length < 3
                         ? height * 0.08 * hearingDnT.length
                         : height * 0.08 * 3,
@@ -467,10 +473,45 @@ class _CasePageState extends State<CasePage> {
 
               // on step continue
               onStepContinue: () {
-                if (currentStep < steps.length - 1) {}
-                setState(() {
-                  currentStep++;
-                });
+                if (currentStep != 3) {
+                  // if first step, check for empty strings
+                  if (currentStep == 0 &&
+                      courtController.text.isNotEmpty &&
+                      caseNumberController.text.isNotEmpty &&
+                      sectionController.text.isNotEmpty) {
+                    setState(() {
+                      currentStep++;
+                    });
+                  }
+                  // if the step is client page
+                  else if (currentStep == 1 &&
+                      clientNameController.text.isNotEmpty &&
+                      clientPhoneController.text.isNotEmpty &&
+                      clientRepController.text.isNotEmpty) {
+                    setState(() {
+                      currentStep++;
+                    });
+                  }
+                  // this is for the oppn page
+                  else if (currentStep == 2 &&
+                      oppnNameController.text.isNotEmpty &&
+                      oppnRepController.text.isNotEmpty) {
+                    setState(() {
+                      currentStep++;
+                    });
+                  }
+                  // what happens if not
+                  else {
+                    CustomWidget().customSnackBarWithText(
+                        content:
+                            'Please fill out the required fields with * sign.',
+                        context: context);
+                  }
+                } else if (currentStep == 3) {
+                  if (hearingDnT.isNotEmpty) {
+                    // upload model to firebase after hashing and encrypting
+                  }
+                }
               },
 
               // onstep cancel
@@ -488,16 +529,16 @@ class _CasePageState extends State<CasePage> {
     );
   }
 
-  // the date picker
-  pickDate() async {
-    final DateTime? dp = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(DateTime.now().year + 10),
-    );
-    return dp;
-  }
+  // // the date picker
+  // pickDate() async {
+  //   final DateTime? dp = await showDatePicker(
+  //     context: context,
+  //     initialDate: DateTime.now(),
+  //     firstDate: DateTime(2000),
+  //     lastDate: DateTime(DateTime.now().year + 10),
+  //   );
+  //   return dp;
+  // }
 
   // the list view generator
   imageListView(List hdntList, double height) {
@@ -519,7 +560,7 @@ class _CasePageState extends State<CasePage> {
             color: ColorPalette().primaryGreen,
           ),
           title: Text(
-            Tools().dateFormatterFromDate(date: hdntList[index].date),
+            hdntList[index].date,
             overflow: TextOverflow.ellipsis,
           ),
           onLongPress: () => showHearingDetail(
@@ -532,26 +573,39 @@ class _CasePageState extends State<CasePage> {
     );
   }
 
-  // hearing date description
-  hearingDescDialog({required double height, required DateTime date}) {
+  // hearing date & description
+  hearingDescDialog({required double height}) {
     // alert dialog with desc options
     showDialog(
       barrierDismissible: false,
-      barrierColor: Colors.white.withOpacity(0.3),
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(
-              'Description( ${Tools().dateFormatterFromDate(date: date)} )',
+          title: Text('Hearing Details',
               style: TextStyle(color: ColorPalette().mainTitleColor),
               overflow: TextOverflow.ellipsis),
           scrollable: true,
           actionsAlignment: MainAxisAlignment.center,
           alignment: Alignment.center,
           content: SizedBox(
-            height: height * 0.3,
+            height: height * 0.35,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisSize: MainAxisSize.max,
               children: [
+                // hearing date field
+                TopLabelTextField(
+                  controller: hearingDateController,
+                  label: 'Hearing Date',
+                  hintText: 'Date of the next hearing',
+                  keyboardType: TextInputType.datetime,
+                  obscureText: false,
+                  requiredField: true,
+                  borderRadius: 12,
+                  maxLength: 10,
+                  borderColor: ColorPalette().primaryGreen,
+                ).topLabelTextField(),
+
                 // description field for a hearing date
                 TopLabelTextField(
                         controller: hearingDescController,
@@ -560,10 +614,10 @@ class _CasePageState extends State<CasePage> {
                         keyboardType: TextInputType.text,
                         obscureText: false,
                         requiredField: false,
-                        maxLength: 100,
                         borderRadius: 12,
-                        borderColor: ColorPalette().primaryGreen,
-                        maxLines: 3)
+                        maxLength: 100,
+                        maxLines: 3,
+                        borderColor: ColorPalette().primaryGreen)
                     .topLabelTextField(),
               ],
             ),
@@ -577,6 +631,7 @@ class _CasePageState extends State<CasePage> {
                 overlayColor: MaterialStateProperty.all(Colors.cyan.shade50),
               ),
               onPressed: () {
+                hearingDateController.clear();
                 hearingDescController.clear();
                 Navigator.pop(context);
               },
@@ -598,15 +653,22 @@ class _CasePageState extends State<CasePage> {
                     MaterialStateProperty.all(ColorPalette().secondaryGreen),
               ),
               onPressed: () async {
-                if (hearingDescController.text.isEmpty) {
+                if (hearingDateController.text.isEmpty) {
                   CustomWidget().customSnackBarWithText(
-                      content:
-                          'Please enter a description to add it. It is optional.',
+                      content: 'Please enter a date to add it. It is optional.',
                       context: context);
                 } else {
+                  // add the new hearing
                   setState(() {
-                    flag = 1;
+                    hearingDnT.add(
+                      Hearing(
+                          date: hearingDateController.text.trim(),
+                          description: hearingDescController.text),
+                    );
+                    hearingDateController.clear();
+                    hearingDescController.clear();
                   });
+
                   Navigator.pop(context, true);
                 }
               },
@@ -626,16 +688,13 @@ class _CasePageState extends State<CasePage> {
 
   // on long press
   showHearingDetail(
-      {required DateTime date,
-      required String details,
-      required double height}) {
+      {required String date, required String details, required double height}) {
     showDialog(
       barrierDismissible: true,
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(
-              'Description - ${Tools().dateFormatterFromDate(date: date)}',
+          title: Text('Details of $date',
               style: TextStyle(color: ColorPalette().mainTitleColor),
               overflow: TextOverflow.ellipsis),
           scrollable: true,
