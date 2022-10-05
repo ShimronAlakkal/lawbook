@@ -36,7 +36,7 @@ class _HomeViewState extends State<HomeView> {
               backgroundColor: ColorPalette().primaryGreen,
               child: const Icon(
                 color: Colors.white,
-                CupertinoIcons.add,
+                Icons.create_new_folder_outlined,
               ),
               onPressed: () {
                 // go to the file addition page.
