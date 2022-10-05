@@ -1,18 +1,18 @@
 class Hearing {
-  String hearingDate;
-  String hearingDescription;
+  DateTime date;
+  String description;
   Hearing({
-    required this.hearingDate,
-    required this.hearingDescription,
+    required this.date,
+    required this.description,
   });
 
   factory Hearing.fromJson(Map<String, dynamic> json) => Hearing(
-        hearingDate: json["hearingDate"],
-        hearingDescription: json["hearingDescription"],
+        date: json["date"],
+        description: json["description"],
       );
 
   Map<String, dynamic> toJson() => {
-        "hearingDate": hearingDate,
-        "hearingDescription": hearingDescription,
+        "date": date,
+        "description": description,
       };
 }
