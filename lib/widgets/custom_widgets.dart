@@ -82,6 +82,7 @@ class CustomWidget {
       {required String content, required BuildContext context}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
+        behavior: SnackBarBehavior.floating,
         content: Text(
           content,
         ),
@@ -115,7 +116,9 @@ class TopLabelTextField {
   bool obscureText;
   int? maxLines;
   int? maxLength;
+  bool requiredField;
   TextInputType keyboardType;
+  Color? borderColor;
 
   TopLabelTextField(
       {required this.controller,
@@ -123,6 +126,8 @@ class TopLabelTextField {
       required this.hintText,
       required this.keyboardType,
       required this.obscureText,
+      required this.requiredField,
+      this.borderColor,
       this.maxLines,
       this.maxLength,
       this.borderRadius});
@@ -132,12 +137,28 @@ class TopLabelTextField {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            color: ColorPalette().secondaryGreen,
-          ),
+        Row(
+          children: [
+            // the label above top
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 14,
+                color: ColorPalette().secondaryGreen,
+              ),
+            ),
+            requiredField
+                ? const Text(
+                    '*',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.red,
+                    ),
+                  )
+                : const SizedBox(
+                    width: 0,
+                  ),
+          ],
         ),
         const SizedBox(height: 6),
         TextField(
@@ -150,6 +171,10 @@ class TopLabelTextField {
           autofocus: false,
           controller: controller,
           decoration: InputDecoration(
+            focusedBorder: borderColor != null
+                ? OutlineInputBorder(
+                    borderSide: BorderSide(color: borderColor!))
+                : null,
             hintText: hintText,
             hintStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
             enabledBorder: OutlineInputBorder(
