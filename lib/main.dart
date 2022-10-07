@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lawbook/home_view.dart';
+import 'package:lawbook/views/onboard/sign_in.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,7 +14,7 @@ Future main() async {
     const MaterialApp(
       title: 'LawBook',
       debugShowCheckedModeBanner: false,
-      home: HomeView(),
+      home: SignIn(),
     ),
   );
 }
