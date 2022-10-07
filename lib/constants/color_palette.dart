@@ -12,6 +12,18 @@ class ColorPalette {
   // accent green
   final Color accentGreen = const Color(0xffCCF9D8);
 
+  // the color used in icons when inactive
+  final Color inactiveIconGrey = const Color(0xff878484);
+
+  // grey used in highlighted containers
+  final Color containerGrey = const Color(0xffEDE8E8);
+
+  // The color for secondary/not so important text
+  final Color secondaryTextColor = const Color(0xff393939);
+
+  // the tirtiary text color
+  final Color tertiaryTextColor = const Color(0xff878484);
+
   // the background color
   final Color backgroundColor = const Color(0xffF8F8F8);
 
