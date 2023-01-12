@@ -16,7 +16,7 @@ Future main() async {
     const MaterialApp(
       title: 'LawBook',
       debugShowCheckedModeBanner: false,
-      home: Onboard(),
+      home: HomeView(),
     ),
   );
 }

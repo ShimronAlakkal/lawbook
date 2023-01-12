@@ -306,22 +306,34 @@ class _CasePageState extends State<CasePage> {
                     ),
                     color: ColorPalette().accentGreen,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Icon(
-                        Icons.book_outlined,
-                        color: ColorPalette().primaryGreen,
-                      ),
-                      Text(
-                        'Hearing dates & details',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            color: ColorPalette().mainTitleColor,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                  child: Padding(
+                    padding: EdgeInsets.only(left: width * 0.04),
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Icon(
+                          Icons.book_outlined,
+                          color: ColorPalette().primaryGreen,
+                        ),
+                        SizedBox(
+                          width: width * 0.08,
+                        ),
+                        Text(
+                          'Hearing dates & details',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: ColorPalette().mainTitleColor,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          width: width * 0.08,
+                        ),
+                        hearingDnT.length > 3
+                            ? const Icon(Icons.arrow_drop_down_rounded)
+                            : const SizedBox()
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -340,8 +352,9 @@ class _CasePageState extends State<CasePage> {
                     : hearingDnT.length < 3
                         ? height * 0.08 * hearingDnT.length
                         : height * 0.08 * 3,
-                child:
-                    hearingDnT == [] ? null : imageListView(hearingDnT, height),
+                child: hearingDnT == []
+                    ? null
+                    : hearingDateAndTimeListView(hearingDnT, height),
               ),
 
               // // Custom button to get files picked
@@ -541,7 +554,7 @@ class _CasePageState extends State<CasePage> {
   // }
 
   // the list view generator
-  imageListView(List hdntList, double height) {
+  hearingDateAndTimeListView(List hdntList, double height) {
     return ListView.builder(
       itemBuilder: (context, index) {
         return ListTile(
@@ -561,6 +574,10 @@ class _CasePageState extends State<CasePage> {
           ),
           title: Text(
             hdntList[index].date,
+            overflow: TextOverflow.ellipsis,
+          ),
+          subtitle: Text(
+            hdntList[index].description,
             overflow: TextOverflow.ellipsis,
           ),
           onLongPress: () => showHearingDetail(

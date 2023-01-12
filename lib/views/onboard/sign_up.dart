@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lawbook/constants/color_palette.dart';
+import 'package:lawbook/views/onboard/sign_in.dart';
 import 'package:lawbook/widgets/custom_widgets.dart';
 
 class SignUp extends StatefulWidget {
@@ -117,13 +118,17 @@ class _SignUpState extends State<SignUp> {
                       fontSize: 15, color: ColorPalette().tertiaryTextColor),
                 ),
                 InkWell(
-                  // Go to sign in page with an alert dialog pop  up
+                  // go to sign In page
                   onTap: () {
-                    //
+                    // move to sign in page
+                    CustomWidget().moveToPage(
+                        page: const SignIn(),
+                        context: context,
+                        replacement: false);
                   },
 
                   child: Text(
-                    'Sign Up',
+                    'Sign In',
                     style:
                         TextStyle(fontSize: 15, color: ColorPalette().linkBlue),
                   ),
