@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lawbook/constants/color_palette.dart';
+import 'package:lawbook/home_view.dart';
+import 'package:lawbook/services/auth_services.dart';
+import 'package:lawbook/utils/tools.dart';
+import 'package:lawbook/views/onboard/sign_up.dart';
 import 'package:lawbook/widgets/custom_widgets.dart';
 
 class SignIn extends StatefulWidget {
@@ -100,7 +104,33 @@ class _SignInState extends State<SignIn> {
 
               // sign in as Vendor or delovery partner button action on click
 
-              onPressed: () {},
+              onPressed: () async {
+                setState(() {
+                  _isLoading = !_isLoading;
+                });
+                // sign in
+                // Create user with email and password
+                if (Tools().isValidEmail(emailController.text.trim()) &&
+                    Tools()
+                        .isValidPassword(password: passwordController.text)) {
+                  var res = await AuthServices().signUserInWithEmailAndPassword(
+                      email: emailController.text.trim(),
+                      password: passwordController.text);
+                  if (res == '1') {
+                    CustomWidget().moveToPage(
+                        page: const HomeView(),
+                        context: context,
+                        replacement: true);
+                  } else {
+                    setState(() {
+                      _isLoading = !_isLoading;
+                    });
+                    CustomWidget().customSnackBarWithText(
+                        content: Tools().errorTextHandling(res),
+                        context: context);
+                  }
+                }
+              },
 
               child: _isLoading
                   ? const CircularProgressIndicator(
@@ -129,7 +159,12 @@ class _SignInState extends State<SignIn> {
                 ),
                 InkWell(
                   // Go to sign up page with an alert dialog pop  up
-                  onTap: () {},
+                  onTap: () {
+                    CustomWidget().moveToPage(
+                        page: const SignUp(),
+                        context: context,
+                        replacement: true);
+                  },
 
                   child: Text(
                     'Sign Up',

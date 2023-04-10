@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lawbook/constants/color_palette.dart';
+import 'package:lawbook/home_view.dart';
+import 'package:lawbook/services/auth_services.dart';
+import 'package:lawbook/utils/tools.dart';
 import 'package:lawbook/views/onboard/sign_in.dart';
 import 'package:lawbook/widgets/custom_widgets.dart';
 
@@ -61,7 +64,7 @@ class _SignUpState extends State<SignUp> {
                     label: 'password',
                     hintText: '',
                     keyboardType: TextInputType.emailAddress,
-                    obscureText: false,
+                    obscureText: true,
                     requiredField: false)
                 .topLabelTextField(),
 
@@ -88,8 +91,39 @@ class _SignUpState extends State<SignUp> {
 
               // sign up here
 
-              onPressed: () {
-                //
+              onPressed: () async {
+                setState(() {
+                  _isLoading = !_isLoading;
+                });
+                // Create user with email and password
+                if (Tools().isValidEmail(emailController.text.trim()) &&
+                    Tools()
+                        .isValidPassword(password: passwordController.text)) {
+                  var res = await AuthServices().signUserUpWithEmailAndPassword(
+                      email: emailController.text.trim(),
+                      password: passwordController.text);
+
+                  if (res == '1') {
+                    CustomWidget().moveToPage(
+                        page: const HomeView(),
+                        context: context,
+                        replacement: true);
+                  } else {
+                    setState(() {
+                      _isLoading = !_isLoading;
+                    });
+                    CustomWidget().customSnackBarWithText(
+                        content: Tools().errorTextHandling(res),
+                        context: context);
+                  }
+                } else {
+                  setState(() {
+                    _isLoading = !_isLoading;
+                  });
+                  CustomWidget().customSnackBarWithText(
+                      content: 'Please fill in the fields correctly.',
+                      context: context);
+                }
               },
 
               child: _isLoading
@@ -124,7 +158,7 @@ class _SignUpState extends State<SignUp> {
                     CustomWidget().moveToPage(
                         page: const SignIn(),
                         context: context,
-                        replacement: false);
+                        replacement: true);
                   },
 
                   child: Text(
