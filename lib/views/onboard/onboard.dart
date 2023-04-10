@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lawbook/views/onboard/sign_in.dart';
 import 'package:lawbook/views/onboard/sign_up.dart';
 
 import '../../constants/color_palette.dart';
@@ -91,85 +92,6 @@ class Onboard extends StatelessWidget {
               ),
             ),
 
-// The 'or' divider between the two main buttons
-            // Padding(
-            //   padding: EdgeInsets.symmetric(
-            //       horizontal: width * 0.1, vertical: height * 0.025),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     crossAxisAlignment: CrossAxisAlignment.center,
-            //     children: [
-            //       Expanded(
-            //         child: Divider(
-            //             height: 1,
-            //             thickness: 1,
-            //             color: ColorPalette().tertiaryTextColor),
-            //       ),
-            //       Text(
-            //         '  or  ',
-            //         style: TextStyle(
-            //             fontSize: 14, color: ColorPalette().tertiaryTextColor),
-            //       ),
-            //       Expanded(
-            //         child: Divider(
-            //           thickness: 1,
-            //           height: 1,
-            //           color: ColorPalette().tertiaryTextColor,
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-
-// Button for sign up with phone
-            // ElevatedButton.icon(
-            //   style: ElevatedButton.styleFrom(
-            //       backgroundColor: Colors.white,
-            //       side: BorderSide(
-            //         width: 1,
-            //         color: ColorPalette().inactiveIconGrey,
-            //       ),
-            //       shape: RoundedRectangleBorder(
-            //           borderRadius: BorderRadius.circular(8)),
-            //       elevation: 0,
-            //       padding: const EdgeInsets.all(12)),
-
-            //   // Move to the registration for delivery partners page on click action.
-            //   onPressed: () async {
-            //     // var msgToken = await FirebaseMessaging.instance.getToken();
-            //     // var res = await AuthServices().signUserInWithGoogle(context);
-            //     // if (res == '1') {
-            //     //   final FirebaseAuth fbauthInstance = FirebaseAuth.instance;
-            //     //   CustomWidgets().moveToPage(
-            //     //       page: NavigationHolder(
-            //     //         shouldUpdateDetails: true,
-            //     //         user: ZellowUser(
-            //     //             uid: fbauthInstance.currentUser!.uid,
-            //     //             email: fbauthInstance.currentUser!.email!,
-            //     //             name: fbauthInstance.currentUser!.displayName!,
-            //     //             msgToken: msgToken),
-            //     //       ),
-            //     //       context: context,
-            //     //       replacement: true);
-            //     // } else {
-            //     //   CustomWidgets()
-            //     //       .snackBarWidget(content: res, context: context);
-            //     // }
-            //   },
-            //   icon: SizedBox(
-            //     height: height * 0.035,
-            //     width: height * 0.035,
-            //     child: Image.asset('assets/images/g.png'),
-            //   ),
-            //   label: Text(
-            //     'Continue with Google',
-            //     overflow: TextOverflow.ellipsis,
-            //     maxLines: 1,
-            //     style: TextStyle(
-            //         fontSize: 17, color: ColorPalette().secondaryTextColor),
-            //   ),
-            // ),
-
             SizedBox(
               height: height * 0.04,
             ),
@@ -186,7 +108,12 @@ class Onboard extends StatelessWidget {
                 ),
                 InkWell(
                   // Go to sign in page with an alert dialog pop  up
-                  onTap: () {},
+                  onTap: () {
+                    CustomWidget().moveToPage(
+                        page: const SignIn(),
+                        context: context,
+                        replacement: true);
+                  },
                   child: Text(
                     'Sign In',
                     style:
