@@ -23,7 +23,7 @@ class FileModel {
 
   String caseNo;
   String court;
-  int importance;
+  bool importance;
   Party client;
   Party opposition;
   String section;
@@ -58,7 +58,7 @@ class FileModel {
         "caseDescription": caseDescription,
         "isOver": isOver,
         "importance": importance,
-        "files": List<dynamic>.from(files!.map((x) => x)),
+        "files": List<dynamic>.from(files.map((x) => x)),
         "hearings": List<dynamic>.from(hearings.map((x) => x.toJson())),
       };
 }
