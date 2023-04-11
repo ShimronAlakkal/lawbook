@@ -3,6 +3,7 @@ import 'package:lawbook/constants/color_palette.dart';
 import 'package:lawbook/home_view.dart';
 import 'package:lawbook/services/auth_services.dart';
 import 'package:lawbook/utils/tools.dart';
+import 'package:lawbook/views/onboard/password_reset_page.dart';
 import 'package:lawbook/views/onboard/sign_up.dart';
 import 'package:lawbook/widgets/custom_widgets.dart';
 
@@ -16,6 +17,8 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  final CustomWidget _customWidgetInstance = CustomWidget();
 
   bool _isLoading = false;
   @override
@@ -64,7 +67,7 @@ class _SignInState extends State<SignIn> {
                     label: 'password',
                     hintText: 'hintText',
                     keyboardType: TextInputType.emailAddress,
-                    obscureText: false,
+                    obscureText: true,
                     requiredField: false)
                 .topLabelTextField(),
 
@@ -76,6 +79,10 @@ class _SignInState extends State<SignIn> {
             InkWell(
               onTap: () {
                 // forgot password
+                _customWidgetInstance.moveToPage(
+                    page: PasswordResetPage(email: emailController.text.trim()),
+                    context: context,
+                    replacement: false);
               },
               child: Text(
                 'Forgot Password? ',
@@ -110,14 +117,12 @@ class _SignInState extends State<SignIn> {
                 });
                 // sign in
                 // Create user with email and password
-                if (Tools().isValidEmail(emailController.text.trim()) &&
-                    Tools()
-                        .isValidPassword(password: passwordController.text)) {
+                if (Tools().isValidEmail(emailController.text.trim())) {
                   var res = await AuthServices().signUserInWithEmailAndPassword(
                       email: emailController.text.trim(),
                       password: passwordController.text);
                   if (res == '1') {
-                    CustomWidget().moveToPage(
+                    _customWidgetInstance.moveToPage(
                         page: const HomeView(),
                         context: context,
                         replacement: true);
@@ -125,7 +130,7 @@ class _SignInState extends State<SignIn> {
                     setState(() {
                       _isLoading = !_isLoading;
                     });
-                    CustomWidget().customSnackBarWithText(
+                    _customWidgetInstance.customSnackBarWithText(
                         content: Tools().errorTextHandling(res),
                         context: context);
                   }
