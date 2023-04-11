@@ -1,9 +1,12 @@
 // ignore_for_file: must_be_immutable
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lawbook/constants/color_palette.dart';
 import 'package:lawbook/models/file_model.dart';
 import 'package:lawbook/models/hearing_model.dart';
+import 'package:lawbook/models/party_model.dart';
+import 'package:lawbook/utils/encryptions_and_decryptions.dart';
 import 'package:lawbook/widgets/custom_widgets.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,6 +25,7 @@ class _CasePageState extends State<CasePage> {
   List<Hearing> hearingDnT = [];
 
   bool importance = false;
+  bool isOver = false;
 
   // section 1 details
   TextEditingController courtController = TextEditingController();
@@ -276,6 +280,34 @@ class _CasePageState extends State<CasePage> {
           height: height * 0.35,
           child: ListView(
             children: [
+              // the is live case
+              ListTile(
+                // tileColor: ColorPalette().accentBlue,
+                leading: Icon(
+                  Icons.all_inbox_outlined,
+                  color: ColorPalette().inactiveIconGrey,
+                ),
+                title: Text(
+                  'Is the case still live ',
+                  style: TextStyle(
+                      color: ColorPalette().primaryGreen,
+                      overflow: TextOverflow.ellipsis),
+                ),
+                trailing: CupertinoSwitch(
+                    thumbColor: Colors.white,
+                    activeColor: ColorPalette().linkBlue,
+                    value: isOver,
+                    onChanged: (value) {
+                      setState(() {
+                        isOver = value;
+                      });
+                    }),
+              ),
+
+              const SizedBox(
+                height: 10,
+              ),
+
               // add hearing date.
               InkWell(
                 onTap: () async {
@@ -725,7 +757,5 @@ class _CasePageState extends State<CasePage> {
 
   saveCase() async {
     // code to save the thing to firebase
-    
   }
-
 }
