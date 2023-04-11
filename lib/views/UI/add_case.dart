@@ -21,6 +21,8 @@ class _CasePageState extends State<CasePage> {
   int currentStep = 0;
   List<Hearing> hearingDnT = [];
 
+  bool importance = false;
+
   // section 1 details
   TextEditingController courtController = TextEditingController();
   TextEditingController caseNumberController = TextEditingController();
@@ -277,19 +279,7 @@ class _CasePageState extends State<CasePage> {
               // add hearing date.
               InkWell(
                 onTap: () async {
-                  // var dp = await pickDate();
-                  // if (dp != null) {
-                  // if a date is picked, then show the desecription dialog;
                   hearingDescDialog(height: height);
-                  //   // if a desc is given, the flag is set to 1,
-                  //   // the hearing desc controller has text in it, add it to the model.
-                  //   // else, make sure there is no text and then add it to model;
-                  //   setState(() {
-                  //     hearingDnT.add(Hearing(
-                  //         date: dp, description: hearingDescController.text));
-                  //     hearingDescController.clear();
-                  //   });
-                  // }
                 },
                 child: Container(
                   height: height * 0.06,
@@ -358,33 +348,6 @@ class _CasePageState extends State<CasePage> {
               ),
 
               // // Custom button to get files picked
-              // InkWell(
-              //   onTap: () {},
-              //   child: Container(
-              //     height: height * 0.06,
-              //     decoration: BoxDecoration(
-              //       borderRadius: BorderRadius.circular(10),
-              //       color: ColorPalette().accentGreen,
-              //     ),
-              //     child: Row(
-              //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //       mainAxisSize: MainAxisSize.max,
-              //       children: [
-              //         Icon(
-              //           Icons.attach_file_rounded,
-              //           color: ColorPalette().primaryGreen,
-              //         ),
-              //         Text(
-              //           'Add related files',
-              //           overflow: TextOverflow.ellipsis,
-              //           style: TextStyle(
-              //               color: ColorPalette().mainTitleColor,
-              //               fontWeight: FontWeight.bold),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),
@@ -411,6 +374,28 @@ class _CasePageState extends State<CasePage> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                CustomWidget().customSnackBarWithText(
+                    content: !importance
+                        ? 'Set this case important.'
+                        : 'Set this case unimportant.',
+                    context: context);
+                setState(() {
+                  importance = !importance;
+                });
+              },
+              icon: importance
+                  ? const Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    )
+                  : const Icon(
+                      Icons.star_border,
+                      color: Colors.grey,
+                    ))
+        ],
       ),
 
       // body
@@ -467,7 +452,7 @@ class _CasePageState extends State<CasePage> {
                       },
                       child: Text(
                         currentStep == steps.length - 1
-                            ? '   Preview   '
+                            ? '   Save   '
                             : '   Next   ',
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -522,7 +507,11 @@ class _CasePageState extends State<CasePage> {
                   }
                 } else if (currentStep == 3) {
                   if (hearingDnT.isNotEmpty) {
-                    // upload model to firebase after hashing and encrypting
+                    // show preview
+                  } else {
+                    CustomWidget().customSnackBarWithText(
+                        content: 'Please add at least one hearning date.',
+                        context: context);
                   }
                 }
               },
@@ -731,4 +720,12 @@ class _CasePageState extends State<CasePage> {
       },
     );
   }
+
+  // dave case
+
+  saveCase() async {
+    // code to save the thing to firebase
+    
+  }
+
 }
