@@ -1,10 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lawbook/home_view.dart';
 import 'package:lawbook/utils/tools.dart';
 import 'package:lawbook/views/onboard/onboard.dart';
 import 'package:lawbook/widgets/custom_widgets.dart';
