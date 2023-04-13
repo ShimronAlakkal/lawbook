@@ -5,8 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lawbook/constants/color_palette.dart';
 import 'package:lawbook/models/file_model.dart';
 import 'package:lawbook/models/hearing_model.dart';
-import 'package:lawbook/models/party_model.dart';
-import 'package:lawbook/utils/encryptions_and_decryptions.dart';
 import 'package:lawbook/widgets/custom_widgets.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
 
