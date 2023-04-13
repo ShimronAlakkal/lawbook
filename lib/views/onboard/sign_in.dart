@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lawbook/constants/color_palette.dart';
+import 'package:lawbook/home_view.dart';
+import 'package:lawbook/services/auth_services.dart';
+import 'package:lawbook/utils/tools.dart';
+import 'package:lawbook/views/onboard/password_reset_page.dart';
+import 'package:lawbook/views/onboard/sign_up.dart';
 import 'package:lawbook/widgets/custom_widgets.dart';
 
 class SignIn extends StatefulWidget {
@@ -12,6 +17,8 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  final CustomWidget _customWidgetInstance = CustomWidget();
 
   bool _isLoading = false;
   @override
@@ -60,7 +67,7 @@ class _SignInState extends State<SignIn> {
                     label: 'password',
                     hintText: 'hintText',
                     keyboardType: TextInputType.emailAddress,
-                    obscureText: false,
+                    obscureText: true,
                     requiredField: false)
                 .topLabelTextField(),
 
@@ -72,6 +79,10 @@ class _SignInState extends State<SignIn> {
             InkWell(
               onTap: () {
                 // forgot password
+                _customWidgetInstance.moveToPage(
+                    page: PasswordResetPage(email: emailController.text.trim()),
+                    context: context,
+                    replacement: false);
               },
               child: Text(
                 'Forgot Password? ',
@@ -100,7 +111,31 @@ class _SignInState extends State<SignIn> {
 
               // sign in as Vendor or delovery partner button action on click
 
-              onPressed: () {},
+              onPressed: () async {
+                setState(() {
+                  _isLoading = !_isLoading;
+                });
+                // sign in
+                // Create user with email and password
+                if (Tools().isValidEmail(emailController.text.trim())) {
+                  var res = await AuthServices().signUserInWithEmailAndPassword(
+                      email: emailController.text.trim(),
+                      password: passwordController.text);
+                  if (res == '1') {
+                    _customWidgetInstance.moveToPage(
+                        page: const HomeView(),
+                        context: context,
+                        replacement: true);
+                  } else {
+                    setState(() {
+                      _isLoading = !_isLoading;
+                    });
+                    _customWidgetInstance.customSnackBarWithText(
+                        content: Tools().errorTextHandling(res),
+                        context: context);
+                  }
+                }
+              },
 
               child: _isLoading
                   ? const CircularProgressIndicator(
@@ -129,7 +164,12 @@ class _SignInState extends State<SignIn> {
                 ),
                 InkWell(
                   // Go to sign up page with an alert dialog pop  up
-                  onTap: () {},
+                  onTap: () {
+                    CustomWidget().moveToPage(
+                        page: const SignUp(),
+                        context: context,
+                        replacement: true);
+                  },
 
                   child: Text(
                     'Sign Up',

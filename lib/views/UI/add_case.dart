@@ -1,4 +1,5 @@
 // ignore_for_file: must_be_immutable
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lawbook/constants/color_palette.dart';
@@ -20,6 +21,9 @@ class CasePage extends StatefulWidget {
 class _CasePageState extends State<CasePage> {
   int currentStep = 0;
   List<Hearing> hearingDnT = [];
+
+  bool importance = false;
+  bool isOver = false;
 
   // section 1 details
   TextEditingController courtController = TextEditingController();
@@ -274,22 +278,38 @@ class _CasePageState extends State<CasePage> {
           height: height * 0.35,
           child: ListView(
             children: [
+              // the is live case
+              ListTile(
+                // tileColor: ColorPalette().accentBlue,
+                leading: Icon(
+                  Icons.all_inbox_outlined,
+                  color: ColorPalette().inactiveIconGrey,
+                ),
+                title: Text(
+                  'Is the case still live ',
+                  style: TextStyle(
+                      color: ColorPalette().primaryGreen,
+                      overflow: TextOverflow.ellipsis),
+                ),
+                trailing: CupertinoSwitch(
+                    thumbColor: Colors.white,
+                    activeColor: ColorPalette().linkBlue,
+                    value: isOver,
+                    onChanged: (value) {
+                      setState(() {
+                        isOver = value;
+                      });
+                    }),
+              ),
+
+              const SizedBox(
+                height: 10,
+              ),
+
               // add hearing date.
               InkWell(
                 onTap: () async {
-                  // var dp = await pickDate();
-                  // if (dp != null) {
-                  // if a date is picked, then show the desecription dialog;
                   hearingDescDialog(height: height);
-                  //   // if a desc is given, the flag is set to 1,
-                  //   // the hearing desc controller has text in it, add it to the model.
-                  //   // else, make sure there is no text and then add it to model;
-                  //   setState(() {
-                  //     hearingDnT.add(Hearing(
-                  //         date: dp, description: hearingDescController.text));
-                  //     hearingDescController.clear();
-                  //   });
-                  // }
                 },
                 child: Container(
                   height: height * 0.06,
@@ -306,22 +326,34 @@ class _CasePageState extends State<CasePage> {
                     ),
                     color: ColorPalette().accentGreen,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Icon(
-                        Icons.book_outlined,
-                        color: ColorPalette().primaryGreen,
-                      ),
-                      Text(
-                        'Hearing dates & details',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            color: ColorPalette().mainTitleColor,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                  child: Padding(
+                    padding: EdgeInsets.only(left: width * 0.04),
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Icon(
+                          Icons.book_outlined,
+                          color: ColorPalette().primaryGreen,
+                        ),
+                        SizedBox(
+                          width: width * 0.08,
+                        ),
+                        Text(
+                          'Hearing dates & details',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: ColorPalette().mainTitleColor,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          width: width * 0.08,
+                        ),
+                        hearingDnT.length > 3
+                            ? const Icon(Icons.arrow_drop_down_rounded)
+                            : const SizedBox()
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -340,38 +372,12 @@ class _CasePageState extends State<CasePage> {
                     : hearingDnT.length < 3
                         ? height * 0.08 * hearingDnT.length
                         : height * 0.08 * 3,
-                child:
-                    hearingDnT == [] ? null : imageListView(hearingDnT, height),
+                child: hearingDnT == []
+                    ? null
+                    : hearingDateAndTimeListView(hearingDnT, height),
               ),
 
               // // Custom button to get files picked
-              // InkWell(
-              //   onTap: () {},
-              //   child: Container(
-              //     height: height * 0.06,
-              //     decoration: BoxDecoration(
-              //       borderRadius: BorderRadius.circular(10),
-              //       color: ColorPalette().accentGreen,
-              //     ),
-              //     child: Row(
-              //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //       mainAxisSize: MainAxisSize.max,
-              //       children: [
-              //         Icon(
-              //           Icons.attach_file_rounded,
-              //           color: ColorPalette().primaryGreen,
-              //         ),
-              //         Text(
-              //           'Add related files',
-              //           overflow: TextOverflow.ellipsis,
-              //           style: TextStyle(
-              //               color: ColorPalette().mainTitleColor,
-              //               fontWeight: FontWeight.bold),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),
@@ -398,6 +404,28 @@ class _CasePageState extends State<CasePage> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                CustomWidget().customSnackBarWithText(
+                    content: !importance
+                        ? 'Set this case important.'
+                        : 'Set this case unimportant.',
+                    context: context);
+                setState(() {
+                  importance = !importance;
+                });
+              },
+              icon: importance
+                  ? const Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    )
+                  : const Icon(
+                      Icons.star_border,
+                      color: Colors.grey,
+                    ))
+        ],
       ),
 
       // body
@@ -454,7 +482,7 @@ class _CasePageState extends State<CasePage> {
                       },
                       child: Text(
                         currentStep == steps.length - 1
-                            ? '   Preview   '
+                            ? '   Save   '
                             : '   Next   ',
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -509,7 +537,11 @@ class _CasePageState extends State<CasePage> {
                   }
                 } else if (currentStep == 3) {
                   if (hearingDnT.isNotEmpty) {
-                    // upload model to firebase after hashing and encrypting
+                    // show preview
+                  } else {
+                    CustomWidget().customSnackBarWithText(
+                        content: 'Please add at least one hearning date.',
+                        context: context);
                   }
                 }
               },
@@ -541,7 +573,7 @@ class _CasePageState extends State<CasePage> {
   // }
 
   // the list view generator
-  imageListView(List hdntList, double height) {
+  hearingDateAndTimeListView(List hdntList, double height) {
     return ListView.builder(
       itemBuilder: (context, index) {
         return ListTile(
@@ -561,6 +593,10 @@ class _CasePageState extends State<CasePage> {
           ),
           title: Text(
             hdntList[index].date,
+            overflow: TextOverflow.ellipsis,
+          ),
+          subtitle: Text(
+            hdntList[index].description,
             overflow: TextOverflow.ellipsis,
           ),
           onLongPress: () => showHearingDetail(
@@ -713,5 +749,11 @@ class _CasePageState extends State<CasePage> {
         );
       },
     );
+  }
+
+  // dave case
+
+  saveCase() async {
+    // code to save the thing to firebase
   }
 }

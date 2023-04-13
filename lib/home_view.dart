@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lawbook/constants/color_palette.dart';
+import 'package:lawbook/services/auth_services.dart';
+import 'package:lawbook/utils/tools.dart';
 import 'package:lawbook/views/UI/add_case.dart';
 import 'package:lawbook/views/UI/organization/create_organization.dart';
 import 'package:lawbook/views/UI/read_page.dart';
 import 'package:lawbook/views/UI/view_case.dart';
+import 'package:lawbook/views/onboard/onboard.dart';
 import 'package:lawbook/widgets/custom_widgets.dart';
 
 class HomeView extends StatefulWidget {
@@ -61,7 +64,18 @@ class _HomeViewState extends State<HomeView> {
         ),
         centerTitle: true,
         leading: IconButton(
-            onPressed: () {},
+            onPressed: () {
+// open dtawerA
+              var res = AuthServices().signUserOut();
+              if (res == '1') {
+                Navigator.pop(context);
+                Tools().popRouteUntilRoot(context);
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (contxt) {
+                  return const Onboard();
+                }));
+              }
+            },
             icon: const Icon(
               Icons.menu,
               color: Colors.black,
