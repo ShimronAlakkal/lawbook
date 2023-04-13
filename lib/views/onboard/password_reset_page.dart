@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lawbook/constants/color_palette.dart';
 import 'package:lawbook/services/password_reset_service.dart';
-import 'package:lawbook/utils/tools.dart';
-import 'package:lawbook/widgets/custom_widgets.dart';
 
 // ignore: must_be_immutable
 class PasswordResetPage extends StatefulWidget {
