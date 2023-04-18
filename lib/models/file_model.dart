@@ -15,7 +15,7 @@ class FileModel {
     required this.client,
     required this.opposition,
     required this.importance,
-    required this.isOver,
+    required this.isLive,
     required this.caseDescription,
     required this.hearings,
     required this.files,
@@ -29,7 +29,7 @@ class FileModel {
   String section;
   String sectionDetails;
   String caseDescription;
-  bool isOver;
+  bool isLive;
   List<Hearing> hearings;
   List<String> files;
 
@@ -42,7 +42,7 @@ class FileModel {
         sectionDetails: json["sectionDetails"],
         caseDescription: json["caseDescription"],
         importance: json["importance"],
-        isOver: json["isOver"],
+        isLive: json["isLive"],
         files: List<String>.from(json["files"].map((x) => x)),
         hearings: List<Hearing>.from(
             json["hearings"].map((x) => Hearing.fromJson(x))),
@@ -56,7 +56,7 @@ class FileModel {
         "section": section,
         "sectionDetails": sectionDetails,
         "caseDescription": caseDescription,
-        "isOver": isOver,
+        "isLive": isLive,
         "importance": importance,
         "files": List<dynamic>.from(files.map((x) => x)),
         "hearings": List<dynamic>.from(hearings.map((x) => x.toJson())),
