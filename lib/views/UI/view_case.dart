@@ -17,6 +17,6 @@ class _CaseViewState extends State<CaseView> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(children: []);
+    return  ListView(children: const[]);
   }
 }

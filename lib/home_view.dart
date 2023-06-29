@@ -4,7 +4,7 @@ import 'package:lawbook/constants/color_palette.dart';
 import 'package:lawbook/services/auth_services.dart';
 import 'package:lawbook/utils/tools.dart';
 import 'package:lawbook/views/UI/add_case.dart';
-import 'package:lawbook/views/UI/organization/create_organization.dart';
+import 'package:lawbook/views/UI/files/files_page.dart';
 import 'package:lawbook/views/UI/read_page.dart';
 import 'package:lawbook/views/UI/view_case.dart';
 import 'package:lawbook/views/onboard/onboard.dart';
@@ -20,7 +20,7 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   int currentIndex = 0;
   GlobalKey scaffoldKey = GlobalKey<ScaffoldState>();
-  List pages = const [CaseView(), OrganizationCreationPage(), ReadPage()];
+  List pages = const [CaseView(), FilesPage(), ReadPage()];
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class _HomeViewState extends State<HomeView> {
         leading: IconButton(
             onPressed: () {
 // open dtawerA
-              var res = AuthServices().signUserOut();
+              Future<dynamic> res = AuthServices().signUserOut();
               if (res == '1') {
                 Navigator.pop(context);
                 Tools().popRouteUntilRoot(context);
@@ -95,7 +95,7 @@ class _HomeViewState extends State<HomeView> {
       ),
 
       // drawer
-      drawer: Drawer(),
+      drawer:const Drawer(),
 
       // bg color
       backgroundColor: ColorPalette().backgroundColor,
@@ -120,10 +120,10 @@ class _HomeViewState extends State<HomeView> {
           // The organization tab
           BottomNavigationBarItem(
             activeIcon: Icon(
-              Icons.group_rounded,
+              Icons.file_present_rounded,
             ),
-            icon: Icon(Icons.group_outlined),
-            label: 'Organization',
+            icon: Icon(Icons.file_present),
+            label: 'Files',
           ),
 
           // the read page

@@ -11,12 +11,12 @@ class FileModel {
     required this.court,
     required this.caseNo,
     required this.section,
-    required this.sectionDetails,
+    required this.caseDescription,
     required this.client,
     required this.opposition,
     required this.importance,
+    required this.isLegalAid,
     required this.isLive,
-    required this.caseDescription,
     required this.hearings,
     required this.files,
   });
@@ -24,13 +24,15 @@ class FileModel {
   String caseNo;
   String court;
   bool importance;
+  bool isLegalAid;
+  String section;
   Party client;
   Party opposition;
-  String section;
-  String sectionDetails;
+
   String caseDescription;
   bool isLive;
   List<Hearing> hearings;
+
   List<String> files;
 
   factory FileModel.fromJson(Map<String, dynamic> json) => FileModel(
@@ -39,26 +41,26 @@ class FileModel {
         client: Party.fromJson(json["party"]),
         opposition: Party.fromJson(json["party"]),
         section: json["section"],
-        sectionDetails: json["sectionDetails"],
         caseDescription: json["caseDescription"],
         importance: json["importance"],
+        isLegalAid: json["isLegalAid"],
         isLive: json["isLive"],
-        files: List<String>.from(json["files"].map((x) => x)),
         hearings: List<Hearing>.from(
             json["hearings"].map((x) => Hearing.fromJson(x))),
+        files: json['files'],
       );
 
   Map<String, dynamic> toJson() => {
         "caseNo": caseNo,
         "court": court,
         "client": client.toJson(),
+        "isLegalAid": isLegalAid,
         "opposition": opposition.toJson(),
         "section": section,
-        "sectionDetails": sectionDetails,
         "caseDescription": caseDescription,
         "isLive": isLive,
         "importance": importance,
-        "files": List<dynamic>.from(files.map((x) => x)),
         "hearings": List<dynamic>.from(hearings.map((x) => x.toJson())),
+        "files": files
       };
 }
