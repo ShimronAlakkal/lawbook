@@ -1,31 +1,31 @@
 class Party {
   Party({
     required this.name,
-    required this.stand,
-    required this.description,
+    required this.side,
     required this.phone,
+    this.address,
     required this.advocateRep,
   });
 
   String name;
-  String stand;
-  String description;
+  String side;
   String phone;
+  String? address;
   String advocateRep;
 
   factory Party.fromJson(Map<String, dynamic> json) => Party(
         name: json["name"],
-        stand: json["stand"],
-        description: json["description"],
+        side: json["side"],
         phone: json["phone"],
+        address: json["address"],
         advocateRep: json["advocateRep"],
       );
 
   Map<String, dynamic> toJson() => {
         "name": name,
-        "stand": stand,
-        "description": description,
+        "side": side,
         "phone": phone,
+        "address": address ?? '',
         "advocateRep": advocateRep,
       };
 }

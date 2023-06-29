@@ -82,6 +82,7 @@ class CustomWidget {
       {required String content, required BuildContext context}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
+        duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
         content: Text(
           content,

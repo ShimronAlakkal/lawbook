@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lawbook/constants/color_palette.dart';
 import 'package:lawbook/models/file_model.dart';
 import 'package:lawbook/models/hearing_model.dart';
+import 'package:lawbook/models/party_model.dart';
+import 'package:lawbook/views/UI/case_preview.dart';
 import 'package:lawbook/widgets/custom_widgets.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,15 +25,16 @@ class _CasePageState extends State<CasePage> {
   List<Hearing> hearingDnT = [];
 
   bool importance = false;
-  bool isOver = false;
+  bool isLive = false;
+  bool isLegalAid = false;
 
-  // section 1 details
-  TextEditingController courtController = TextEditingController();
+  // section 1 details (case)
+  TextEditingController caseCourtController = TextEditingController();
   TextEditingController caseNumberController = TextEditingController();
-  TextEditingController sectionController = TextEditingController();
-  TextEditingController sectionDescriptionController = TextEditingController();
+  TextEditingController caseSectionController = TextEditingController();
+  TextEditingController caseDescription = TextEditingController();
 
-  // section 2 details
+  // section 2 details (client)
   TextEditingController clientNameController = TextEditingController();
   TextEditingController clientPhoneController = TextEditingController();
   TextEditingController clientRepController = TextEditingController();
@@ -44,6 +47,9 @@ class _CasePageState extends State<CasePage> {
   TextEditingController hearingDateController = TextEditingController();
   TextEditingController hearingDescController = TextEditingController();
 
+  // page navigation instance
+  final CustomWidget _navigation = CustomWidget();
+
   @override
   void initState() {
     super.initState();
@@ -51,10 +57,10 @@ class _CasePageState extends State<CasePage> {
 
   @override
   void dispose() {
-    courtController.dispose();
+    caseCourtController.dispose();
     caseNumberController.dispose();
-    sectionController.dispose();
-    sectionDescriptionController.dispose();
+    caseSectionController.dispose();
+    caseDescription.dispose();
 
     clientNameController.dispose();
     clientPhoneController.dispose();
@@ -93,7 +99,7 @@ class _CasePageState extends State<CasePage> {
             children: [
               // The court controller
               TopLabelTextField(
-                      controller: courtController,
+                      controller: caseCourtController,
                       label: 'Court ',
                       hintText: 'Eg. CJM, DLSA, TLSC',
                       keyboardType: TextInputType.text,
@@ -119,7 +125,7 @@ class _CasePageState extends State<CasePage> {
 
               // The section Section
               TopLabelTextField(
-                      controller: sectionController,
+                      controller: caseSectionController,
                       label: 'Sections ',
                       hintText: 'Under which section does this case fall into.',
                       keyboardType: TextInputType.name,
@@ -132,12 +138,12 @@ class _CasePageState extends State<CasePage> {
 
               // The section desc
               TopLabelTextField(
-                      controller: sectionDescriptionController,
+                      controller: caseDescription,
                       label: 'Description',
                       hintText: 'describe the case (optional)',
                       keyboardType: TextInputType.name,
                       borderRadius: 12,
-                      maxLength: 500,
+                      maxLength: 5000,
                       maxLines: 4,
                       requiredField: false,
                       obscureText: false)
@@ -291,15 +297,44 @@ class _CasePageState extends State<CasePage> {
                       color: ColorPalette().primaryGreen,
                       overflow: TextOverflow.ellipsis),
                 ),
-                trailing: CupertinoSwitch(
-                    thumbColor: Colors.white,
-                    activeColor: ColorPalette().linkBlue,
-                    value: isOver,
-                    onChanged: (value) {
-                      setState(() {
-                        isOver = value;
-                      });
-                    }),
+                trailing: Checkbox(
+                  activeColor: ColorPalette().linkBlue,
+                
+                  onChanged: (value) {
+                    setState(() {
+                      isLive = value!;
+                    });
+                  },
+                  value: isLive,
+                ),
+              ),
+
+              const SizedBox(
+                height: 10,
+              ),
+
+              // the is legal aid
+              ListTile(
+                // tileColor: ColorPalette().accentBlue,
+                leading: Icon(
+                  Icons.assignment_ind_outlined,
+                  color: ColorPalette().inactiveIconGrey,
+                ),
+                title: Text(
+                  'Is the case a legal aid ',
+                  style: TextStyle(
+                      color: ColorPalette().primaryGreen,
+                      overflow: TextOverflow.ellipsis),
+                ),
+                trailing: Checkbox(
+                  activeColor: ColorPalette().linkBlue,
+                  onChanged: (value) {
+                    setState(() {
+                      isLegalAid = value!;
+                    });
+                  },
+                  value: isLegalAid,
+                ),
               ),
 
               const SizedBox(
@@ -405,6 +440,7 @@ class _CasePageState extends State<CasePage> {
           },
         ),
         actions: [
+          //  case importance setting button
           IconButton(
               onPressed: () {
                 CustomWidget().customSnackBarWithText(
@@ -494,19 +530,14 @@ class _CasePageState extends State<CasePage> {
                 );
               },
 
-              // on step tap
-              onStepTapped: (value) {
-                null;
-              },
-
               // on step continue
               onStepContinue: () {
                 if (currentStep != 3) {
                   // if first step, check for empty strings
                   if (currentStep == 0 &&
-                      courtController.text.isNotEmpty &&
+                      caseCourtController.text.isNotEmpty &&
                       caseNumberController.text.isNotEmpty &&
-                      sectionController.text.isNotEmpty) {
+                      caseSectionController.text.isNotEmpty) {
                     setState(() {
                       currentStep++;
                     });
@@ -537,7 +568,37 @@ class _CasePageState extends State<CasePage> {
                   }
                 } else if (currentStep == 3) {
                   if (hearingDnT.isNotEmpty) {
+                    // set the file model here
+                    FileModel caseFile = FileModel(
+                      court: caseCourtController.text,
+                      caseNo: caseNumberController.text,
+                      section: caseSectionController.text,
+                      caseDescription: caseDescription.text,
+                      client: Party(
+                          name: clientNameController.text,
+                          side: 'client',
+                          phone: clientPhoneController.text,
+                          address: '',
+                          advocateRep: clientRepController.text),
+                      opposition: Party(
+                          name: oppnNameController.text,
+                          side: 'oppn',
+                          phone: oppnPhoneController.text,
+                          address: '',
+                          advocateRep: oppnRepController.text),
+                      importance: importance,
+                      isLegalAid: isLegalAid,
+                      isLive: isLive,
+                      hearings: hearingDnT,
+                      files: [],
+                    );
+
                     // show preview
+
+                    _navigation.moveToPage(
+                        page: CasePreviewPage(file: caseFile),
+                        context: context,
+                        replacement: false);
                   } else {
                     CustomWidget().customSnackBarWithText(
                         content: 'Please add at least one hearning date.',
@@ -560,17 +621,6 @@ class _CasePageState extends State<CasePage> {
       ),
     );
   }
-
-  // // the date picker
-  // pickDate() async {
-  //   final DateTime? dp = await showDatePicker(
-  //     context: context,
-  //     initialDate: DateTime.now(),
-  //     firstDate: DateTime(2000),
-  //     lastDate: DateTime(DateTime.now().year + 10),
-  //   );
-  //   return dp;
-  // }
 
   // the list view generator
   hearingDateAndTimeListView(List hdntList, double height) {
@@ -749,11 +799,5 @@ class _CasePageState extends State<CasePage> {
         );
       },
     );
-  }
-
-  // dave case
-
-  saveCase() async {
-    // code to save the thing to firebase
   }
 }

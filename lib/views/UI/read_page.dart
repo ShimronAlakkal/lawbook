@@ -10,8 +10,6 @@ class ReadPage extends StatefulWidget {
 class _ReadPageState extends State<ReadPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(child: Text('Read page')),
-    );
+    return const Center(child: Text('Read page'));
   }
 }
